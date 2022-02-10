@@ -1,27 +1,72 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <el-card class="main" shadow="never">
+    <Header />
+    <List :todos="todoList.todos" />
+    <Footer />
+  </el-card>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent, provide, reactive } from "vue";
+import Header from "components/Header.vue";
+import List from "components/List.vue";
+import Footer from "components/Footer.vue";
+
+import { todo } from "./types/todo";
 
 export default defineComponent({
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
+    Header,
+    List,
+    Footer,
+  },
+
+  setup() {
+    const todoList = reactive<{ todos: todo[] }>({
+      todos: [
+        // {
+        //   id: 1,
+        //   isSelected: true,
+        //   content: "奔驰",
+        // },
+        // {
+        //   id: 2,
+        //   isSelected: false,
+        //   content: "宝马",
+        // },
+        // {
+        //   id: 3,
+        //   isSelected: false,
+        //   content: "奥迪",
+        // },
+      ],
+    });
+
+    const addTodo = (content: string) => {
+      todoList.todos.unshift({
+        id: Date.now(),
+        isSelected: false,
+        content: content,
+      });
+    };
+    provide("addTodo", addTodo);
+
+    const deleteTodo = (ind: number) => {
+      todoList.todos.splice(ind, 1);
+    };
+    provide("deleteTodo", deleteTodo);
+
+    return {
+      todoList,
+    };
+  },
 });
 </script>
 
 <style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.main {
+  width: 600px;
+  margin: 20px auto 0; /* no */
 }
 </style>
