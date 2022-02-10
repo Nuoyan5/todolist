@@ -2,12 +2,12 @@
   <el-card class="main" shadow="never">
     <Header />
     <List :todos="todoList.todos" />
-    <Footer />
+    <Footer :countSelected="countSelected" :alllength="todoList.todos.length" />
   </el-card>
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, reactive } from "vue";
+import { computed, defineComponent, provide, reactive } from "vue";
 import Header from "components/Header.vue";
 import List from "components/List.vue";
 import Footer from "components/Footer.vue";
@@ -57,8 +57,21 @@ export default defineComponent({
     };
     provide("deleteTodo", deleteTodo);
 
+    // const countSelected = computed<number>(()=>{
+    //   todoList.todos.reduce((total,item)
+    //      total+item.isSelected?1:0
+    //   )
+    // })
+    const countSelected = computed(() => {
+      return todoList.todos.reduce(
+        (total, item, ind) => total + (item.isSelected ? 1 : 0),
+        0
+      );
+    });
+
     return {
       todoList,
+      countSelected,
     };
   },
 });

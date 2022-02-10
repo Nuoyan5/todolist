@@ -9,6 +9,7 @@
 
 <script lang="ts">
 import { defineComponent, inject, ref } from "vue";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   name: "Header",
@@ -16,9 +17,21 @@ export default defineComponent({
   setup(props) {
     let input = ref<string>("");
 
+    const warning = (info) => {
+      ElMessage({
+        showClose: true,
+        message: info,
+        type: "warning",
+      });
+    };
     const addTodoFun = inject("addTodo") as Function;
     const addTodo = () => {
-      addTodoFun(input.value);
+      if (input.value) {
+        addTodoFun(input.value);
+      } else {
+        warning("输入内容不能为空，请输入");
+      }
+
       input.value = "";
     };
     return {

@@ -1,16 +1,34 @@
 <template>
   <div class="footer">
-    <el-checkbox class="show" label="已完成0/全部5" size="large"></el-checkbox>
+    <el-checkbox class="show" :label="text" size="large"></el-checkbox>
 
     <el-button class="clear" type="success">清空已完成任务</el-button>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   name: "Footer",
+  props: {
+    countSelected: {
+      type: Number,
+      required: true,
+    },
+    alllength: {
+      type: Number,
+      required: true,
+    },
+  },
+
+  setup(props) {
+    return {
+      text: computed(
+        () => `已完成${props.countSelected}/全部${props.alllength}`
+      ),
+    };
+  },
 });
 </script>
 
