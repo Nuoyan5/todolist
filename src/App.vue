@@ -7,7 +7,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, provide, reactive } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  provide,
+  reactive,
+  watch,
+  onBeforeUnmount,
+} from "vue";
 import Header from "components/Header.vue";
 import List from "components/List.vue";
 import Footer from "components/Footer.vue";
@@ -32,6 +40,25 @@ export default defineComponent({
         // }
       ],
     });
+
+    onMounted(() => {
+      const todosData = localStorage.getItem("TODOSDATA");
+      if (todosData) {
+        todoList.todos = JSON.parse(todosData);
+      }
+    });
+    watch(
+      todoList,
+      () => {
+        localStorage.setItem("TODOSDATA", JSON.stringify(todoList.todos));
+      },
+      { deep: true }
+    );
+    // onBeforeUnmount(() => {
+    //   console.log("要销毁组件了==============");
+
+    //   localStorage.setItem("TODOSDATA", JSON.stringify(todoList.todos));
+    // });
 
     const addTodo = (content: string) => {
       todoList.todos.unshift({
