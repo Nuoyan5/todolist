@@ -29,17 +29,7 @@ export default defineComponent({
         //   id: 1,
         //   isSelected: true,
         //   content: "奔驰",
-        // },
-        // {
-        //   id: 2,
-        //   isSelected: false,
-        //   content: "宝马",
-        // },
-        // {
-        //   id: 3,
-        //   isSelected: false,
-        //   content: "奥迪",
-        // },
+        // }
       ],
     });
 
@@ -57,14 +47,27 @@ export default defineComponent({
     };
     provide("deleteTodo", deleteTodo);
 
-    // const countSelected = computed<number>(()=>{
-    //   todoList.todos.reduce((total,item)
-    //      total+item.isSelected?1:0
-    //   )
-    // })
-    const countSelected = computed(() => {
+    const handleAllSelected = (flag: boolean) => {
+      todoList.todos.forEach((item) => {
+        item.isSelected = flag;
+      });
+    };
+    provide("handleAllSelected", handleAllSelected);
+
+    const handleClearCompleteMission = () => {
+      let newList: todo[] = [];
+      todoList.todos.forEach((item) => {
+        if (!item.isSelected) {
+          newList.push(item);
+        }
+      });
+      todoList.todos = newList;
+    };
+    provide("handleClearCompleteMission", handleClearCompleteMission);
+
+    const countSelected = computed<number>(() => {
       return todoList.todos.reduce(
-        (total, item, ind) => total + (item.isSelected ? 1 : 0),
+        (total, item) => total + (item.isSelected ? 1 : 0),
         0
       );
     });

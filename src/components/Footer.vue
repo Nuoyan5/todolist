@@ -1,13 +1,22 @@
 <template>
   <div class="footer">
-    <el-checkbox class="show" :label="text" size="large"></el-checkbox>
+    <el-checkbox
+      v-model="isAllSelected"
+      class="show"
+      :label="text"
+      size="large"
+      @change="allSelectedChange"
+    ></el-checkbox>
 
-    <el-button class="clear" type="success">清空已完成任务</el-button>
+    <el-button @click="clearCompleteMission" class="clear" type="success"
+      >清空已完成任务</el-button
+    >
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, inject, ref, watchEffect } from "vue";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   name: "Footer",
@@ -23,10 +32,44 @@ export default defineComponent({
   },
 
   setup(props) {
+    const isAllSelected = ref(false);
+    watchEffect(() => {
+      if (props.countSelected === props.alllength && props.alllength > 0) {
+        isAllSelected.value = true;
+      } else {
+        isAllSelected.value = false;
+      }
+    });
+
+    const handleAllSelectedFun = inject("handleAllSelected") as Function;
+    const allSelectedChange = (val) => {
+      handleAllSelectedFun(val);
+    };
+
+    const warning = (info: string) => {
+      ElMessage({
+        showClose: true,
+        message: info,
+        type: "warning",
+      });
+    };
+    const handleClearCompleteMissionFun = inject(
+      "handleClearCompleteMission"
+    ) as Function;
+    const clearCompleteMission = () => {
+      if (props.alllength > 0 && props.countSelected > 0) {
+        handleClearCompleteMissionFun();
+      } else {
+        warning("请至少选择一项！");
+      }
+    };
     return {
       text: computed(
         () => `已完成${props.countSelected}/全部${props.alllength}`
       ),
+      isAllSelected,
+      allSelectedChange,
+      clearCompleteMission,
     };
   },
 });

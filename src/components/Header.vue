@@ -17,7 +17,7 @@ export default defineComponent({
   setup(props) {
     let input = ref<string>("");
 
-    const warning = (info) => {
+    const warning = (info: string) => {
       ElMessage({
         showClose: true,
         message: info,
