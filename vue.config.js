@@ -15,6 +15,9 @@ const postcss = px2rem({
 
 // 使用等比适配插件
 module.exports = {
+    //打包app时放开该配置
+    publicPath: './',
+
     lintOnSave: true,
     css: {
         loaderOptions: {
