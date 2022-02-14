@@ -74,6 +74,11 @@ export default defineComponent({
     };
     provide("deleteTodo", deleteTodo);
 
+    const changeTodo = (ind: number, val: string) => {
+      todoList.todos[ind].content = val;
+    };
+    provide("changeTodo", changeTodo);
+
     const handleAllSelected = (flag: boolean) => {
       todoList.todos.forEach((item) => {
         item.isSelected = flag;
